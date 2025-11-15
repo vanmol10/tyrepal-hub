@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Calculator, AlertCircle, CheckCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { TyreComparison } from "@/components/TyreComparison";
 
 interface TyreSize {
   width: number;
@@ -49,28 +50,34 @@ const TyreCalculator = () => {
     return (2 * sidewallHeight) + rimDiameterMm;
   };
 
+  const [oldTyre, setOldTyre] = useState<TyreSize | null>(null);
+  const [newTyre, setNewTyre] = useState<TyreSize | null>(null);
+
   const handleCalculate = () => {
     setError("");
     setResults(null);
 
-    const oldTyre = parseTyreSize(oldSize);
-    const newTyre = parseTyreSize(newSize);
+    const parsedOldTyre = parseTyreSize(oldSize);
+    const parsedNewTyre = parseTyreSize(newSize);
+    
+    setOldTyre(parsedOldTyre);
+    setNewTyre(parsedNewTyre);
 
-    if (!oldTyre || !newTyre) {
+    if (!parsedOldTyre || !parsedNewTyre) {
       setError("Invalid tyre size format. Use format: 185/65 R15");
       return;
     }
 
-    const oldDiameter = calculateDiameter(oldTyre);
-    const newDiameter = calculateDiameter(newTyre);
+    const oldDiameter = calculateDiameter(parsedOldTyre);
+    const newDiameter = calculateDiameter(parsedNewTyre);
     const diameterChange = newDiameter - oldDiameter;
     const diameterChangePercent = (diameterChange / oldDiameter) * 100;
     const speedometerError = diameterChangePercent;
     
-    const oldSidewallHeight = (oldTyre.width * oldTyre.aspectRatio) / 100;
-    const newSidewallHeight = (newTyre.width * newTyre.aspectRatio) / 100;
+    const oldSidewallHeight = (parsedOldTyre.width * parsedOldTyre.aspectRatio) / 100;
+    const newSidewallHeight = (parsedNewTyre.width * parsedNewTyre.aspectRatio) / 100;
     const heightDifference = newSidewallHeight - oldSidewallHeight;
-    const widthDifference = newTyre.width - oldTyre.width;
+    const widthDifference = parsedNewTyre.width - parsedOldTyre.width;
     
     const fitmentCompatible = Math.abs(diameterChangePercent) <= 3;
 
@@ -144,8 +151,27 @@ const TyreCalculator = () => {
             </CardContent>
           </Card>
 
-          {results && (
+          {results && oldTyre && newTyre && (
             <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Visual Comparison</CardTitle>
+                  <CardDescription>
+                    Side-by-side comparison of tyre dimensions
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <TyreComparison
+                    oldSize={oldSize}
+                    newSize={newSize}
+                    oldDiameter={results.oldDiameter}
+                    newDiameter={results.newDiameter}
+                    oldWidth={oldTyre.width}
+                    newWidth={newTyre.width}
+                  />
+                </CardContent>
+              </Card>
+
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
