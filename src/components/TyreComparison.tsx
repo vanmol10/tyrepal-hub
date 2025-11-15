@@ -27,10 +27,10 @@ export const TyreComparison = ({
   const centerY = svgHeight / 2;
 
   return (
-    <div className="w-full overflow-x-auto">
+    <div className="w-full overflow-x-auto animate-fade-in">
       <svg
         viewBox={`0 0 600 ${svgHeight}`}
-        className="w-full"
+        className="w-full transition-all duration-500 ease-out"
         style={{ maxHeight: "400px" }}
       >
         <defs>
@@ -48,7 +48,7 @@ export const TyreComparison = ({
         </defs>
 
         {/* Old Tyre */}
-        <g transform={`translate(150, ${centerY})`}>
+        <g transform={`translate(150, ${centerY})`} className="animate-scale-in">
           {/* Rim */}
           <ellipse
             cx="0"
@@ -58,6 +58,7 @@ export const TyreComparison = ({
             fill="hsl(var(--muted))"
             stroke="hsl(var(--border))"
             strokeWidth="2"
+            style={{ transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)" }}
           />
           {/* Tyre */}
           <ellipse
@@ -69,6 +70,7 @@ export const TyreComparison = ({
             stroke="hsl(var(--foreground))"
             strokeWidth={oldScaledWidth}
             opacity="0.8"
+            style={{ transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)" }}
           />
           {/* Tread pattern */}
           <ellipse
@@ -78,6 +80,7 @@ export const TyreComparison = ({
             ry={oldScaledDiameter / 2}
             fill="url(#treadPattern)"
             opacity="0.3"
+            style={{ transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)" }}
           />
           
           {/* Label */}
@@ -86,6 +89,7 @@ export const TyreComparison = ({
             y={oldScaledDiameter / 2 + 25}
             textAnchor="middle"
             className="fill-foreground text-sm font-semibold"
+            style={{ transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)" }}
           >
             Current
           </text>
@@ -94,6 +98,7 @@ export const TyreComparison = ({
             y={oldScaledDiameter / 2 + 40}
             textAnchor="middle"
             className="fill-muted-foreground text-xs"
+            style={{ transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)" }}
           >
             {oldSize}
           </text>
@@ -108,19 +113,21 @@ export const TyreComparison = ({
             strokeWidth="1"
             strokeDasharray="4 2"
             opacity="0.5"
+            style={{ transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)" }}
           />
           <text
             x="0"
             y="-8"
             textAnchor="middle"
             className="fill-primary text-xs"
+            style={{ transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)" }}
           >
             {oldDiameter.toFixed(0)}mm
           </text>
         </g>
 
         {/* New Tyre */}
-        <g transform={`translate(450, ${centerY})`}>
+        <g transform={`translate(450, ${centerY})`} className="animate-scale-in" style={{ animationDelay: "0.1s" }}>
           {/* Rim */}
           <ellipse
             cx="0"
@@ -130,6 +137,7 @@ export const TyreComparison = ({
             fill="hsl(var(--muted))"
             stroke="hsl(var(--border))"
             strokeWidth="2"
+            style={{ transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)" }}
           />
           {/* Tyre */}
           <ellipse
@@ -141,6 +149,7 @@ export const TyreComparison = ({
             stroke="hsl(var(--primary))"
             strokeWidth={newScaledWidth}
             opacity="0.8"
+            style={{ transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)" }}
           />
           {/* Tread pattern */}
           <ellipse
@@ -150,6 +159,7 @@ export const TyreComparison = ({
             ry={newScaledDiameter / 2}
             fill="url(#treadPattern)"
             opacity="0.3"
+            style={{ transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)" }}
           />
           
           {/* Label */}
@@ -158,6 +168,7 @@ export const TyreComparison = ({
             y={newScaledDiameter / 2 + 25}
             textAnchor="middle"
             className="fill-primary text-sm font-semibold"
+            style={{ transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)" }}
           >
             New
           </text>
@@ -166,6 +177,7 @@ export const TyreComparison = ({
             y={newScaledDiameter / 2 + 40}
             textAnchor="middle"
             className="fill-muted-foreground text-xs"
+            style={{ transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)" }}
           >
             {newSize}
           </text>
@@ -180,18 +192,20 @@ export const TyreComparison = ({
             strokeWidth="1"
             strokeDasharray="4 2"
             opacity="0.5"
+            style={{ transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)" }}
           />
           <text
             x="0"
             y="-8"
             textAnchor="middle"
             className="fill-primary text-xs"
+            style={{ transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)" }}
           >
             {newDiameter.toFixed(0)}mm
           </text>
         </g>
 
-        {/* Comparison line */}
+        {/* Comparison lines */}
         <line
           x1="150"
           y1={centerY - Math.max(oldScaledDiameter, newScaledDiameter) / 2 - 20}
@@ -201,6 +215,7 @@ export const TyreComparison = ({
           strokeWidth="1"
           strokeDasharray="2 2"
           opacity="0.3"
+          style={{ transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)" }}
         />
         <line
           x1="150"
@@ -211,6 +226,7 @@ export const TyreComparison = ({
           strokeWidth="1"
           strokeDasharray="2 2"
           opacity="0.3"
+          style={{ transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)" }}
         />
       </svg>
     </div>
