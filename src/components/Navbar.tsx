@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { NavLink } from "@/components/NavLink";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -46,6 +47,15 @@ export const Navbar = () => {
               TyreCare Pro
             </span>
           </Link>
+
+          <div className="hidden md:flex items-center gap-6">
+            <NavLink to="/tyre-calculator" className="text-sm hover:text-primary transition-colors">
+              Calculator
+            </NavLink>
+            <NavLink to="/booking" className="text-sm hover:text-primary transition-colors">
+              Book Service
+            </NavLink>
+          </div>
 
           <div className="flex items-center gap-4">
             {user ? (
