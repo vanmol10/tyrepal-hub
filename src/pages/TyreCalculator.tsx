@@ -152,8 +152,8 @@ const TyreCalculator = () => {
           </Card>
 
           {results && oldTyre && newTyre && (
-            <div className="space-y-6">
-              <Card>
+            <div className="space-y-6 animate-fade-in">
+              <Card className="overflow-hidden">
                 <CardHeader>
                   <CardTitle>Visual Comparison</CardTitle>
                   <CardDescription>
