@@ -55,6 +55,12 @@ export const Navbar = () => {
             <NavLink to="/booking" className="text-sm hover:text-primary transition-colors">
               Book Service
             </NavLink>
+            <NavLink to="/knowledge" className="text-sm hover:text-primary transition-colors">
+              Knowledge
+            </NavLink>
+            <NavLink to="/warranty" className="text-sm hover:text-primary transition-colors">
+              Warranty
+            </NavLink>
           </div>
 
           <div className="flex items-center gap-4">

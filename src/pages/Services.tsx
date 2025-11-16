@@ -9,8 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Wrench, Plus, Loader2, AlertCircle } from "lucide-react";
+import { Wrench, Plus, Loader2, AlertCircle, Calendar as CalendarIcon, Car } from "lucide-react";
 import { format } from "date-fns";
 
 interface Vehicle {
@@ -279,59 +280,154 @@ export default function Services() {
           </Dialog>
         </div>
 
-        {vehicles.length === 0 ? (
-          <Card>
-            <CardContent className="flex flex-col items-center justify-center py-12">
-              <AlertCircle className="h-16 w-16 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No vehicles added</h3>
-              <p className="text-muted-foreground mb-4">Add a vehicle first to track services</p>
-              <Button onClick={() => navigate("/vehicles")}>Add Vehicle</Button>
-            </CardContent>
-          </Card>
-        ) : loading && services.length === 0 ? (
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
-        ) : services.length === 0 ? (
-          <Card>
-            <CardContent className="flex flex-col items-center justify-center py-12">
-              <Wrench className="h-16 w-16 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No service records yet</h3>
-              <p className="text-muted-foreground mb-4">Start tracking your vehicle services</p>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map((service) => (
-              <Card key={service.id}>
-                <CardHeader>
-                  <CardTitle>
-                    {SERVICE_TYPES.find((t) => t.value === service.service_type)?.label}
-                  </CardTitle>
-                  <CardDescription>
-                    {service.vehicles.vehicle_brand} {service.vehicles.vehicle_model}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Date:</span>
-                    <span className="font-medium">{format(new Date(service.service_date), "dd MMM yyyy")}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">KMs:</span>
-                    <span className="font-medium">{service.current_kms.toLocaleString()}</span>
-                  </div>
-                  {service.notes && (
-                    <div className="text-sm pt-2">
-                      <span className="text-muted-foreground">Notes:</span>
-                      <p className="mt-1 text-sm">{service.notes}</p>
-                    </div>
-                  )}
+        <Tabs defaultValue="cards" className="w-full">
+          <TabsList className="mb-6">
+            <TabsTrigger value="cards">Card View</TabsTrigger>
+            <TabsTrigger value="timeline">Timeline View</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="cards">
+            {vehicles.length === 0 ? (
+              <Card>
+                <CardContent className="flex flex-col items-center justify-center py-12">
+                  <AlertCircle className="h-16 w-16 text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No vehicles added</h3>
+                  <p className="text-muted-foreground mb-4">Add a vehicle first to track services</p>
+                  <Button onClick={() => navigate("/vehicles")}>Add Vehicle</Button>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        )}
+            ) : loading && services.length === 0 ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : services.length === 0 ? (
+              <Card>
+                <CardContent className="flex flex-col items-center justify-center py-12">
+                  <Wrench className="h-16 w-16 text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No service records yet</h3>
+                  <p className="text-muted-foreground mb-4">Start tracking your vehicle services</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {services.map((service) => {
+                  const needsAlign = needsAlignment(service);
+                  return (
+                    <Card key={service.id} className={needsAlign ? "border-orange-500" : ""}>
+                      <CardHeader>
+                        <CardTitle>
+                          {SERVICE_TYPES.find((t) => t.value === service.service_type)?.label}
+                        </CardTitle>
+                        <CardDescription>
+                          {service.vehicles.vehicle_brand} {service.vehicles.vehicle_model}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">Date:</span>
+                          <span className="font-medium">{format(new Date(service.service_date), "dd MMM yyyy")}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">KMs:</span>
+                          <span className="font-medium">{service.current_kms.toLocaleString()}</span>
+                        </div>
+                        {service.notes && (
+                          <div className="text-sm pt-2">
+                            <span className="text-muted-foreground">Notes:</span>
+                            <p className="mt-1 text-sm">{service.notes}</p>
+                          </div>
+                        )}
+                        {needsAlign && (
+                          <div className="flex items-start gap-2 text-sm text-orange-600 bg-orange-50 p-3 rounded-md mt-3">
+                            <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                            <span>Due for wheel alignment</span>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="timeline">
+            {vehicles.length === 0 ? (
+              <Card>
+                <CardContent className="flex flex-col items-center justify-center py-12">
+                  <AlertCircle className="h-16 w-16 text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No vehicles added</h3>
+                  <p className="text-muted-foreground mb-4">Add a vehicle first to track services</p>
+                  <Button onClick={() => navigate("/vehicles")}>Add Vehicle</Button>
+                </CardContent>
+              </Card>
+            ) : loading && services.length === 0 ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : services.length === 0 ? (
+              <Card>
+                <CardContent className="flex flex-col items-center justify-center py-12">
+                  <Wrench className="h-16 w-16 text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No service records yet</h3>
+                  <p className="text-muted-foreground mb-4">Start tracking your vehicle services</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="relative">
+                <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-border" />
+                <div className="space-y-6 pl-12">
+                  {services.map((service) => {
+                    const needsAlign = needsAlignment(service);
+                    return (
+                      <div key={service.id} className="relative">
+                        <div className="absolute -left-12 top-2 w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                          <Wrench className="h-4 w-4 text-primary-foreground" />
+                        </div>
+                        <Card className={needsAlign ? "border-orange-500" : ""}>
+                          <CardHeader>
+                            <div className="flex items-start justify-between">
+                              <div>
+                                <CardTitle>
+                                  {SERVICE_TYPES.find((t) => t.value === service.service_type)?.label}
+                                </CardTitle>
+                                <CardDescription>
+                                  {service.vehicles.vehicle_brand} {service.vehicles.vehicle_model} ({service.vehicles.registration_number})
+                                </CardDescription>
+                              </div>
+                              <div className="text-sm text-muted-foreground">
+                                {format(new Date(service.service_date), "dd MMM yyyy")}
+                              </div>
+                            </div>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2 text-sm">
+                                <Car className="h-4 w-4 text-muted-foreground" />
+                                <span>{service.current_kms.toLocaleString()} km</span>
+                              </div>
+                              {service.notes && (
+                                <p className="text-sm text-muted-foreground pt-2 border-t">
+                                  {service.notes}
+                                </p>
+                              )}
+                              {needsAlign && (
+                                <div className="flex items-start gap-2 text-sm text-orange-600 bg-orange-50 p-3 rounded-md">
+                                  <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                                  <span>Due for wheel alignment</span>
+                                </div>
+                              )}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
